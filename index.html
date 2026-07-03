@@ -4,13 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VidKing Player Builder</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
 <style>
-
 :root{
     --bg:#070a12;
     --bg-grid:#0c111d;
@@ -24,13 +21,14 @@
     --muted:#7688a8;
     --danger:#ff5d7a;
 }
-
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
-
+html,body{
+    overflow-x:hidden;
+}
 body{
     font-family:'Inter',sans-serif;
     background:
@@ -42,7 +40,6 @@ body{
     padding:40px 24px 80px;
     min-height:100vh;
 }
-
 body::before{
     content:"";
     position:fixed;
@@ -55,16 +52,13 @@ body::before{
     pointer-events:none;
     z-index:0;
 }
-
 .container{
     max-width:1180px;
     margin:auto;
     position:relative;
     z-index:1;
 }
-
 /* ---------- Header ---------- */
-
 .eyebrow{
     display:inline-flex;
     align-items:center;
@@ -80,7 +74,6 @@ body::before{
     border-radius:999px;
     margin-bottom:18px;
 }
-
 .eyebrow span.dot{
     width:6px;
     height:6px;
@@ -89,16 +82,14 @@ body::before{
     box-shadow:0 0 8px var(--cyan);
     animation:pulse 1.6s ease-in-out infinite;
 }
-
 @keyframes pulse{
     0%,100%{opacity:1;}
     50%{opacity:0.25;}
 }
-
 h1{
     font-family:'Space Grotesk',sans-serif;
     font-weight:700;
-    font-size:clamp(32px,5vw,52px);
+    font-size:clamp(30px,5vw,52px);
     line-height:1.05;
     background:linear-gradient(120deg,#ffffff 0%,#bfe9ff 45%,var(--cyan) 100%);
     -webkit-background-clip:text;
@@ -106,7 +97,6 @@ h1{
     color:transparent;
     letter-spacing:-0.01em;
 }
-
 .subtitle{
     margin-top:12px;
     color:var(--muted);
@@ -114,9 +104,7 @@ h1{
     max-width:560px;
     line-height:1.5;
 }
-
 /* ---------- Section labels ---------- */
-
 .section-label{
     display:flex;
     align-items:center;
@@ -128,16 +116,13 @@ h1{
     color:var(--muted);
     margin:40px 0 14px;
 }
-
 .section-label::after{
     content:"";
     flex:1;
     height:1px;
     background:linear-gradient(90deg,var(--line),transparent);
 }
-
 /* ---------- Search panel ---------- */
-
 .search-panel{
     background:linear-gradient(180deg,var(--panel-2),var(--panel));
     border:1px solid var(--line);
@@ -146,19 +131,16 @@ h1{
     position:relative;
     overflow:visible;
 }
-
 .search-row{
     display:flex;
     gap:12px;
     flex-wrap:wrap;
 }
-
 .search-input-wrap{
     flex:1;
     min-width:240px;
     position:relative;
 }
-
 .search-input-wrap svg{
     position:absolute;
     left:14px;
@@ -169,7 +151,6 @@ h1{
     stroke:var(--muted);
     pointer-events:none;
 }
-
 #query{
     width:100%;
     padding:14px 14px 14px 40px;
@@ -177,16 +158,14 @@ h1{
     border:1px solid var(--line);
     border-radius:10px;
     color:var(--text);
-    font-size:15px;
+    font-size:16px;
     outline:none;
     transition:border-color .15s, box-shadow .15s;
 }
-
 #query:focus{
     border-color:var(--cyan);
     box-shadow:0 0 0 3px rgba(61,242,255,0.12);
 }
-
 .type-toggle{
     display:flex;
     background:#0b1019;
@@ -195,7 +174,6 @@ h1{
     padding:4px;
     gap:4px;
 }
-
 .type-toggle button{
     all:unset;
     cursor:pointer;
@@ -207,12 +185,10 @@ h1{
     transition:all .15s;
     text-align:center;
 }
-
 .type-toggle button.active{
     background:linear-gradient(135deg,var(--teal),var(--cyan));
     color:#03110f;
 }
-
 .api-key-note{
     margin-top:12px;
     font-size:12px;
@@ -222,7 +198,6 @@ h1{
     gap:8px;
     flex-wrap:wrap;
 }
-
 .api-key-note input{
     background:#0b1019;
     border:1px solid var(--line);
@@ -232,17 +207,15 @@ h1{
     font-size:12px;
     font-family:'JetBrains Mono',monospace;
     width:220px;
+    max-width:100%;
 }
-
 .api-key-note a{
     color:var(--cyan);
     text-decoration:none;
 }
-
 .api-key-note a:hover{
     text-decoration:underline;
 }
-
 .status-line{
     margin-top:10px;
     font-family:'JetBrains Mono',monospace;
@@ -250,13 +223,10 @@ h1{
     color:var(--muted);
     min-height:16px;
 }
-
 .status-line.error{
     color:var(--danger);
 }
-
 /* results grid */
-
 #results{
     margin-top:16px;
     display:grid;
@@ -266,7 +236,6 @@ h1{
     overflow-y:auto;
     padding-right:4px;
 }
-
 #results::-webkit-scrollbar{
     width:8px;
 }
@@ -274,7 +243,6 @@ h1{
     background:var(--line);
     border-radius:8px;
 }
-
 .result-card{
     background:#0b1019;
     border:1px solid var(--line);
@@ -285,13 +253,11 @@ h1{
     display:flex;
     flex-direction:column;
 }
-
 .result-card:hover{
     transform:translateY(-3px);
     border-color:var(--cyan);
     box-shadow:0 8px 24px rgba(61,242,255,0.15);
 }
-
 .result-card .poster{
     width:100%;
     aspect-ratio:2/3;
@@ -304,11 +270,9 @@ h1{
     text-align:center;
     padding:8px;
 }
-
 .result-card .meta{
     padding:8px 9px 10px;
 }
-
 .result-card .r-title{
     font-size:12.5px;
     font-weight:600;
@@ -319,16 +283,13 @@ h1{
     -webkit-box-orient:vertical;
     overflow:hidden;
 }
-
 .result-card .r-year{
     margin-top:4px;
     font-family:'JetBrains Mono',monospace;
     font-size:10.5px;
     color:var(--cyan);
 }
-
 /* selected show badge */
-
 .selected-banner{
     margin-top:14px;
     display:none;
@@ -340,27 +301,23 @@ h1{
     padding:10px 14px;
     font-size:13px;
 }
-
 .selected-banner img{
     width:34px;
     height:50px;
     object-fit:cover;
     border-radius:5px;
     background:#141b28;
+    flex-shrink:0;
 }
-
 .selected-banner .sb-text b{
     color:var(--teal);
 }
-
 /* ---------- Controls grid ---------- */
-
 .controls{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
     gap:14px;
 }
-
 .card{
     background:var(--panel);
     border:1px solid var(--line);
@@ -368,11 +325,9 @@ h1{
     border-radius:14px;
     transition:border-color .15s;
 }
-
 .card:focus-within{
     border-color:var(--cyan);
 }
-
 label{
     display:block;
     margin-bottom:8px;
@@ -382,7 +337,6 @@ label{
     color:var(--muted);
     font-weight:600;
 }
-
 input[type="number"],
 input[type="text"],
 select{
@@ -392,18 +346,16 @@ select{
     border-radius:9px;
     background:#0b1019;
     color:var(--text);
-    font-size:14px;
+    font-size:16px;
     outline:none;
     transition:border-color .15s, box-shadow .15s;
 }
-
 input[type="number"]:focus,
 input[type="text"]:focus,
 select:focus{
     border-color:var(--cyan);
     box-shadow:0 0 0 3px rgba(61,242,255,0.12);
 }
-
 input[type="color"]{
     -webkit-appearance:none;
     width:44px;
@@ -413,26 +365,25 @@ input[type="color"]{
     background:transparent;
     cursor:pointer;
     padding:0;
+    flex-shrink:0;
 }
-
 .color-row{
     display:flex;
     align-items:center;
     gap:10px;
 }
-
 .color-row input[type="text"]{
     flex:1;
+    min-width:0;
     font-family:'JetBrains Mono',monospace;
 }
-
 .checkbox{
     display:flex;
     align-items:center;
     justify-content:space-between;
     padding:4px 0;
+    gap:12px;
 }
-
 .checkbox label{
     margin:0;
     text-transform:none;
@@ -440,20 +391,17 @@ input[type="color"]{
     color:var(--text);
     font-weight:500;
 }
-
 .switch{
     position:relative;
     width:40px;
     height:22px;
     flex-shrink:0;
 }
-
 .switch input{
     opacity:0;
     width:0;
     height:0;
 }
-
 .slider{
     position:absolute;
     inset:0;
@@ -462,7 +410,6 @@ input[type="color"]{
     cursor:pointer;
     transition:background .15s;
 }
-
 .slider::before{
     content:"";
     position:absolute;
@@ -474,21 +421,16 @@ input[type="color"]{
     border-radius:50%;
     transition:transform .15s;
 }
-
 .switch input:checked + .slider{
     background:linear-gradient(135deg,var(--teal),var(--cyan));
 }
-
 .switch input:checked + .slider::before{
     transform:translateX(18px);
 }
-
 .tv-only{
     display:none;
 }
-
 /* ---------- Play button ---------- */
-
 .play-btn{
     width:100%;
     padding:16px;
@@ -505,23 +447,18 @@ input[type="color"]{
     transition:transform .12s, box-shadow .15s;
     box-shadow:0 8px 30px rgba(0,217,181,0.25);
 }
-
 .play-btn:hover{
     transform:translateY(-2px);
     box-shadow:0 12px 36px rgba(61,242,255,0.35);
 }
-
 .play-btn:active{
     transform:translateY(0);
 }
-
 /* ---------- URL output ---------- */
-
 .url-box{
     position:relative;
     margin-top:20px;
 }
-
 textarea{
     width:100%;
     padding:14px 44px 14px 14px;
@@ -534,7 +471,6 @@ textarea{
     resize:vertical;
     outline:none;
 }
-
 .copy-btn{
     position:absolute;
     top:10px;
@@ -547,14 +483,11 @@ textarea{
     cursor:pointer;
     font-size:11px;
 }
-
 .copy-btn:hover{
     color:var(--cyan);
     border-color:var(--cyan);
 }
-
 /* ---------- Player frame ---------- */
-
 .player-frame{
     position:relative;
     margin-top:22px;
@@ -564,13 +497,11 @@ textarea{
     background-size:200% 200%;
     animation:borderflow 6s ease infinite;
 }
-
 @keyframes borderflow{
     0%{background-position:0% 50%;}
     50%{background-position:100% 50%;}
     100%{background-position:0% 50%;}
 }
-
 iframe{
     width:100%;
     height:700px;
@@ -579,9 +510,7 @@ iframe{
     display:block;
     background:#000;
 }
-
 /* ---------- Messages panel ---------- */
-
 #messages{
     margin-top:20px;
     background:var(--panel);
@@ -589,69 +518,70 @@ iframe{
     padding:16px;
     border-radius:12px;
     white-space:pre-wrap;
+    word-break:break-word;
     font-family:'JetBrains Mono',monospace;
     font-size:12.5px;
     color:var(--muted);
     max-height:220px;
     overflow-y:auto;
 }
-
+/* ---------- Responsive ---------- */
+/* Tablets / large phones: make the player scale by 16:9 instead of a fixed 700px */
+@media (max-width:820px){
+    iframe{
+        height:auto;
+        aspect-ratio:16/9;
+        min-height:220px;
+    }
+}
 @media (max-width:560px){
-    body{padding:24px 16px 60px;}
+    body{padding:22px 14px 56px;}
+    .section-label{margin:30px 0 12px;}
+    .search-panel{padding:16px;}
     .search-row{flex-direction:column;}
     .type-toggle{width:100%;}
     .type-toggle button{flex:1;}
+    .api-key-note{gap:8px;}
+    .api-key-note input{width:100%;}
+    .card{padding:14px;}
+    .controls{gap:12px;}
+    .play-btn{padding:15px;font-size:14px;}
+    iframe{min-height:200px;}
+    #messages{font-size:11.5px;}
 }
-
 </style>
 </head>
 <body>
-
 <div class="container">
-
 <div class="eyebrow"><span class="dot"></span> VidKing Embed Console</div>
 <h1>Player Builder</h1>
 <p class="subtitle">Search a title, drop in the numbers, launch the embed. No more digging for TMDB IDs by hand.</p>
-
 <div class="section-label">Find a title</div>
-
 <div class="search-panel">
-
 <div class="search-row">
-
 <div class="search-input-wrap">
 <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-<input id="query" type="text" placeholder="Search movies or TV shows…" autocomplete="off">
+<input id="query" type="text" placeholder="Search movies or TV shows..." autocomplete="off">
 </div>
-
 <div class="type-toggle" id="searchTypeToggle">
 <button data-val="movie" class="active">Movies</button>
 <button data-val="tv">TV Shows</button>
 </div>
-
 </div>
-
 <div class="api-key-note">
 🔑 Paste your TMDB <b>API Key</b> or <b>API Read Access Token</b> to enable search:
 <input id="tmdbKey" value="d99611b0bb34e4a15d41e8c4e37470c0" type="text" disabled placeholder="API Key (v3) or Read Access Token (v4)">
 <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">Get one free →</a>
 </div>
-
 <div class="status-line" id="searchStatus"></div>
-
 <div id="results"></div>
-
 <div class="selected-banner" id="selectedBanner">
 <img id="sbImg" src="" alt="">
 <div class="sb-text">Selected: <b id="sbTitle"></b> — <span id="sbId"></span></div>
 </div>
-
 </div>
-
 <div class="section-label">Configure</div>
-
 <div class="controls">
-
 <div class="card">
 <label>Media Type</label>
 <select id="type">
@@ -659,22 +589,18 @@ iframe{
 <option value="tv">TV Show</option>
 </select>
 </div>
-
 <div class="card">
 <label>TMDB ID</label>
 <input id="id" type="number" placeholder="1078605">
 </div>
-
 <div class="card tv-only">
 <label>Season</label>
 <input id="season" type="number" value="1">
 </div>
-
 <div class="card tv-only">
 <label>Episode</label>
 <input id="episode" type="number" value="1">
 </div>
-
 <div class="card">
 <label>Theme Color</label>
 <div class="color-row">
@@ -682,14 +608,11 @@ iframe{
 <input id="color" type="text" value="004741">
 </div>
 </div>
-
 <div class="card">
 <label>Start Time (seconds)</label>
 <input id="progress" type="number" value="0">
 </div>
-
 <div class="card">
-
 <div class="checkbox">
 <label>Auto Play</label>
 <div class="switch">
@@ -697,7 +620,6 @@ iframe{
 <span class="slider"></span>
 </div>
 </div>
-
 <div class="checkbox">
 <label>Next Episode</label>
 <div class="switch">
@@ -705,7 +627,6 @@ iframe{
 <span class="slider"></span>
 </div>
 </div>
-
 <div class="checkbox">
 <label>Episode Selector</label>
 <div class="switch">
@@ -713,99 +634,72 @@ iframe{
 <span class="slider"></span>
 </div>
 </div>
-
 </div>
-
 </div>
-
 <button class="play-btn" onclick="play()">▶ Launch Player</button>
-
 <div class="url-box">
-<textarea id="url" rows="3" readonly placeholder="Your embed URL will appear here…"></textarea>
+<textarea id="url" rows="3" readonly placeholder="Your embed URL will appear here..."></textarea>
 <button class="copy-btn" onclick="copyUrl()" title="Copy URL">Copy</button>
 </div>
-
 <div class="player-frame">
 <iframe id="player" allowfullscreen></iframe>
 </div>
-
 <div class="section-label">Player events</div>
-<div id="messages">Waiting for player events…</div>
-
+<div id="messages">Waiting for player events...</div>
 </div>
-
 <script>
-
 const type=document.getElementById("type");
 const idField=document.getElementById("id");
 const colorText=document.getElementById("color");
 const colorPicker=document.getElementById("colorPicker");
-
 function syncTvFields(){
     document.querySelectorAll(".tv-only").forEach(card=>{
         card.style.display=type.value==="tv"?"block":"none";
     });
 }
-
 type.addEventListener("change",syncTvFields);
 syncTvFields();
-
 colorPicker.addEventListener("input",()=>{
     colorText.value=colorPicker.value.replace("#","");
 });
-
 colorText.addEventListener("input",()=>{
     const v=colorText.value.replace("#","").trim();
     if(/^[0-9a-fA-F]{6}$/.test(v)){
         colorPicker.value="#"+v;
     }
 });
-
 /* ---------------- Play ---------------- */
-
 function play(){
-
     const mediaType=type.value;
     const id=idField.value.trim();
-
     if(!id){
         alert("Enter a TMDB ID (or search above)");
         return;
     }
-
     const season=document.getElementById("season").value;
     const episode=document.getElementById("episode").value;
-
     const color=colorText.value.replace("#","");
     const autoplay=document.getElementById("autoplay").checked;
     const nextEpisode=document.getElementById("nextEpisode").checked;
     const episodeSelector=document.getElementById("episodeSelector").checked;
     const progress=document.getElementById("progress").value;
-
     let base="https://www.vidking.net/embed/";
-
     if(mediaType==="movie"){
         base+=`movie/${id}`;
     }
     else{
         base+=`tv/${id}/${season}/${episode}`;
     }
-
     const params=new URLSearchParams();
-
     if(color) params.set("color",color);
     if(autoplay) params.set("autoPlay","true");
     if(nextEpisode) params.set("nextEpisode","true");
     if(episodeSelector) params.set("episodeSelector","true");
     if(progress>0) params.set("progress",progress);
-
     const finalURL=base+"?"+params.toString();
-
     document.getElementById("url").value=finalURL;
     document.getElementById("player").src=finalURL;
-
 }
-
 function copyUrl(){
     const box=document.getElementById("url");
     if(!box.value) return;
@@ -818,7 +712,6 @@ function copyUrl(){
     btn.textContent="Copied";
     setTimeout(()=>btn.textContent=old,1200);
 }
-
 window.addEventListener("message",(event)=>{
     try{
         const data=typeof event.data==="string"
@@ -831,17 +724,13 @@ window.addEventListener("message",(event)=>{
         console.log(event.data);
     }
 });
-
 /* ---------------- TMDB search ---------------- */
-
 let searchType="movie";
 let searchDebounce=null;
 let tmdbApiKey="d99611b0bb34e4a15d41e8c4e37470c0";
-
 document.getElementById("tmdbKey").addEventListener("input",(e)=>{
     tmdbApiKey=e.target.value.trim();
 });
-
 document.getElementById("searchTypeToggle").addEventListener("click",(e)=>{
     const btn=e.target.closest("button");
     if(!btn) return;
@@ -851,7 +740,6 @@ document.getElementById("searchTypeToggle").addEventListener("click",(e)=>{
     const q=document.getElementById("query").value.trim();
     if(q) runSearch(q);
 });
-
 document.getElementById("query").addEventListener("input",(e)=>{
     const q=e.target.value.trim();
     clearTimeout(searchDebounce);
@@ -862,44 +750,33 @@ document.getElementById("query").addEventListener("input",(e)=>{
     }
     searchDebounce=setTimeout(()=>runSearch(q),400);
 });
-
 function setStatus(msg,isError){
     const el=document.getElementById("searchStatus");
     el.textContent=msg;
     el.classList.toggle("error",!!isError);
 }
-
 function isReadAccessToken(key){
     // v4 Read Access Tokens are long JWTs (three dot-separated base64url segments,
     // ~200+ chars). v3 API keys are short 32-char hex strings.
     return key.length>60 && key.split(".").length===3;
 }
-
 async function runSearch(q){
-
     if(!tmdbApiKey){
         setStatus("Add a TMDB API key or read access token above to enable search.",true);
         document.getElementById("results").innerHTML="";
         return;
     }
-
-    setStatus("Searching…");
-
+    setStatus("Searching...");
     const endpoint=searchType==="movie"?"movie":"tv";
     const useBearer=isReadAccessToken(tmdbApiKey);
-
     const url=useBearer
         ?`https://api.themoviedb.org/3/search/${endpoint}?query=${encodeURIComponent(q)}&include_adult=false`
         :`https://api.themoviedb.org/3/search/${endpoint}?api_key=${encodeURIComponent(tmdbApiKey)}&query=${encodeURIComponent(q)}&include_adult=false`;
-
     const fetchOptions=useBearer
         ?{headers:{Authorization:`Bearer ${tmdbApiKey}`,accept:"application/json"}}
         :{};
-
     try{
-
         const res=await fetch(url,fetchOptions);
-
         if(!res.ok){
             if(res.status===401){
                 setStatus("Invalid TMDB API key / read access token.",true);
@@ -909,38 +786,28 @@ async function runSearch(q){
             document.getElementById("results").innerHTML="";
             return;
         }
-
         const data=await res.json();
         renderResults(data.results||[]);
-
         setStatus(data.results && data.results.length
             ? `${data.results.length} result${data.results.length===1?"":"s"}`
             : "No results found.");
-
     }catch(err){
         setStatus("Network error while searching.",true);
         document.getElementById("results").innerHTML="";
     }
-
 }
-
 function renderResults(list){
-
     const container=document.getElementById("results");
     container.innerHTML="";
-
     list.slice(0,24).forEach(item=>{
-
         const title=item.title||item.name||"Untitled";
         const date=item.release_date||item.first_air_date||"";
         const year=date?date.slice(0,4):"—";
         const poster=item.poster_path
             ?`https://image.tmdb.org/t/p/w200${item.poster_path}`
             :"";
-
         const card=document.createElement("div");
         card.className="result-card";
-
         card.innerHTML=`
             <div class="poster" style="${poster?`background-image:url('${poster}')`:""}">${poster?"":"No image"}</div>
             <div class="meta">
@@ -948,32 +815,21 @@ function renderResults(list){
                 <div class="r-year">${year} · ID ${item.id}</div>
             </div>
         `;
-
         card.querySelector(".r-title").textContent=title;
-
         card.addEventListener("click",()=>selectResult(item,title,poster));
-
         container.appendChild(card);
-
     });
-
 }
-
 function selectResult(item,title,poster){
-
     idField.value=item.id;
     type.value=searchType;
     syncTvFields();
-
     const banner=document.getElementById("selectedBanner");
     banner.style.display="flex";
     document.getElementById("sbImg").src=poster||"";
     document.getElementById("sbTitle").textContent=title;
     document.getElementById("sbId").textContent=`TMDB ID ${item.id} · ${searchType==="movie"?"Movie":"TV"}`;
-
 }
-
 </script>
-
 </body>
 </html>
