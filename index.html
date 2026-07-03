@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VidKing Player Generator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#111827;
+    color:white;
+    padding:30px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+h1{
+    margin-bottom:20px;
+}
+
+.controls{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.card{
+    background:#1f2937;
+    padding:15px;
+    border-radius:12px;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    font-size:14px;
+}
+
+input,
+select{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#374151;
+    color:white;
+}
+
+.checkbox{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:10px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    font-size:16px;
+    border:none;
+    cursor:pointer;
+    border-radius:10px;
+    background:#004741;
+    color:white;
+    margin-top:15px;
+}
+
+button:hover{
+    background:#01685f;
+}
+
+iframe{
+    width:100%;
+    height:700px;
+    border:none;
+    border-radius:12px;
+    margin-top:20px;
+    background:black;
+}
+
+textarea{
+    width:100%;
+    margin-top:20px;
+    padding:12px;
+    border-radius:10px;
+    background:#1f2937;
+    color:#7CFFDD;
+    resize:vertical;
+}
+
+#messages{
+    margin-top:20px;
+    background:#1f2937;
+    padding:15px;
+    border-radius:10px;
+    white-space:pre-wrap;
+    font-family:monospace;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>VidKing Player Builder</h1>
+
+<div class="controls">
+
+<div class="card">
+
+<label>Media Type</label>
+
+<select id="type">
+<option value="movie">Movie</option>
+<option value="tv">TV Show</option>
+</select>
+
+</div>
+
+<div class="card">
+
+<label>TMDB ID</label>
+
+<input id="id" type="number" placeholder="1078605">
+
+</div>
+
+<div class="card tv-only">
+
+<label>Season</label>
+
+<input id="season" type="number" value="1">
+
+</div>
+
+<div class="card tv-only">
+
+<label>Episode</label>
+
+<input id="episode" type="number" value="1">
+
+</div>
+
+<div class="card">
+
+<label>Theme Color</label>
+
+<input id="color" value="004741">
+
+</div>
+
+<div class="card">
+
+<label>Start Time (seconds)</label>
+
+<input id="progress" type="number" value="0">
+
+</div>
+
+<div class="card">
+
+<div class="checkbox">
+<input id="autoplay" type="checkbox">
+<label>Auto Play</label>
+</div>
+
+<div class="checkbox">
+<input id="nextEpisode" type="checkbox" checked>
+<label>Next Episode</label>
+</div>
+
+<div class="checkbox">
+<input id="episodeSelector" type="checkbox" checked>
+<label>Episode Selector</label>
+</div>
+
+</div>
+
+</div>
+
+<button onclick="play()">Play</button>
+
+<textarea id="url" rows="3" readonly></textarea>
+
+<iframe id="player" allowfullscreen></iframe>
+
+<div id="messages">
+Waiting for player events...
+</div>
+
+</div>
+
+<script>
+
+const type=document.getElementById("type");
+
+type.addEventListener("change",()=>{
+
+document.querySelectorAll(".tv-only").forEach(card=>{
+
+card.style.display=type.value==="tv"?"block":"none";
+
+});
+
+});
+
+type.dispatchEvent(new Event("change"));
+
+function play(){
+
+const mediaType=type.value;
+const id=document.getElementById("id").value.trim();
+
+if(!id){
+alert("Enter TMDB ID");
+return;
+}
+
+const season=document.getElementById("season").value;
+const episode=document.getElementById("episode").value;
+
+const color=document.getElementById("color").value.replace("#","");
+const autoplay=document.getElementById("autoplay").checked;
+const nextEpisode=document.getElementById("nextEpisode").checked;
+const episodeSelector=document.getElementById("episodeSelector").checked;
+const progress=document.getElementById("progress").value;
+
+let base="https://www.vidking.net/embed/";
+
+if(mediaType==="movie"){
+base+=`movie/${id}`;
+}
+else{
+base+=`tv/${id}/${season}/${episode}`;
+}
+
+const params=new URLSearchParams();
+
+if(color)
+params.set("color",color);
+
+if(autoplay)
+params.set("autoPlay","true");
+
+if(nextEpisode)
+params.set("nextEpisode","true");
+
+if(episodeSelector)
+params.set("episodeSelector","true");
+
+if(progress>0)
+params.set("progress",progress);
+
+const finalURL=base+"?"+params.toString();
+
+document.getElementById("url").value=finalURL;
+
+document.getElementById("player").src=finalURL;
+
+}
+
+window.addEventListener("message",(event)=>{
+
+try{
+
+const data=typeof event.data==="string"
+?JSON.parse(event.data)
+:event.data;
+
+document.getElementById("messages").textContent=
+JSON.stringify(data,null,4);
+
+console.log(data);
+
+}catch(e){
+
+console.log(event.data);
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
