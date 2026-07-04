@@ -510,13 +510,98 @@ iframe{
     display:block;
     background:#000;
 }
-/* ---------- Messages panel ---------- */
-#messages{
-    margin-top:20px;
-    background:var(--panel);
+/* ---------- Collapsible Player events panel ---------- */
+.events-panel{
+    margin-top:22px;
     border:1px solid var(--line);
+    border-radius:14px;
+    background:var(--panel);
+    overflow:hidden;
+    transition:border-color .15s;
+}
+.events-panel.open{
+    border-color:rgba(61,242,255,0.35);
+}
+.events-header{
+    all:unset;
+    box-sizing:border-box;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:14px 16px;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    transition:background .15s;
+}
+.events-header:hover{
+    background:var(--panel-2);
+}
+.eh-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+}
+.eh-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--line);
+    flex-shrink:0;
+    transition:background .2s, box-shadow .2s;
+}
+.eh-dot.live{
+    background:var(--teal);
+    box-shadow:0 0 8px var(--teal);
+    animation:pulse 1.6s ease-in-out infinite;
+}
+.eh-title{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+    white-space:nowrap;
+}
+.eh-count{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--cyan);
+    background:rgba(61,242,255,0.08);
+    border:1px solid rgba(61,242,255,0.25);
+    padding:1px 8px;
+    border-radius:999px;
+    flex-shrink:0;
+}
+.eh-chevron{
+    width:18px;
+    height:18px;
+    stroke:var(--muted);
+    flex-shrink:0;
+    transition:transform .25s ease;
+}
+.events-panel.open .eh-chevron{
+    transform:rotate(180deg);
+    stroke:var(--cyan);
+}
+/* smooth collapse via grid-rows 0fr -> 1fr */
+.events-body{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:grid-template-rows .25s ease;
+}
+.events-panel.open .events-body{
+    grid-template-rows:1fr;
+}
+.events-inner{
+    overflow:hidden;
+    min-height:0;
+}
+#messages{
+    border-top:1px solid var(--line);
     padding:16px;
-    border-radius:12px;
     white-space:pre-wrap;
     word-break:break-word;
     font-family:'JetBrains Mono',monospace;
@@ -524,6 +609,13 @@ iframe{
     color:var(--muted);
     max-height:220px;
     overflow-y:auto;
+}
+#messages::-webkit-scrollbar{
+    width:8px;
+}
+#messages::-webkit-scrollbar-thumb{
+    background:var(--line);
+    border-radius:8px;
 }
 /* ---------- Responsive ---------- */
 /* Tablets / large phones: make the player scale by 16:9 instead of a fixed 700px */
@@ -616,7 +708,7 @@ iframe{
 <div class="checkbox">
 <label>Auto Play</label>
 <div class="switch">
-<input id="autoplay" type="checkbox">
+<input id="autoplay" type="checkbox" checked>
 <span class="slider"></span>
 </div>
 </div>
@@ -644,9 +736,27 @@ iframe{
 <div class="player-frame">
 <iframe id="player" allowfullscreen></iframe>
 </div>
-<div class="section-label">Player events</div>
-<div id="messages">Waiting for player events...</div>
+
+<!-- Collapsible Player events panel -->
+<div class="events-panel" id="eventsPanel">
+    <button class="events-header" id="eventsToggle" type="button" aria-expanded="false" aria-controls="eventsBody">
+        <span class="eh-left">
+            <span class="eh-dot" id="ehDot"></span>
+            <span class="eh-title">Player events</span>
+            <span class="eh-count" id="ehCount">0</span>
+        </span>
+        <svg class="eh-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+    </button>
+    <div class="events-body" id="eventsBody">
+        <div class="events-inner">
+            <div id="messages">Waiting for player events...</div>
+        </div>
+    </div>
 </div>
+
+</div><!-- /.container -->
 <script>
 const type=document.getElementById("type");
 const idField=document.getElementById("id");
@@ -712,6 +822,32 @@ function copyUrl(){
     btn.textContent="Copied";
     setTimeout(()=>btn.textContent=old,1200);
 }
+/* ---------------- Collapsible events panel ---------------- */
+const eventsPanel=document.getElementById("eventsPanel");
+const eventsToggle=document.getElementById("eventsToggle");
+const ehDot=document.getElementById("ehDot");
+const ehCount=document.getElementById("ehCount");
+let eventCount=0;
+let hasAutoOpened=false;
+
+function setEventsOpen(open){
+    eventsPanel.classList.toggle("open",open);
+    eventsToggle.setAttribute("aria-expanded",open?"true":"false");
+    if(open) ehDot.classList.remove("live"); // clear the "new event" pulse once seen
+}
+eventsToggle.addEventListener("click",()=>{
+    setEventsOpen(!eventsPanel.classList.contains("open"));
+});
+function registerEvent(){
+    eventCount++;
+    ehCount.textContent=eventCount;
+    if(!hasAutoOpened){
+        hasAutoOpened=true;
+        setEventsOpen(true);            // auto-open the first time an event arrives
+    }else if(!eventsPanel.classList.contains("open")){
+        ehDot.classList.add("live");    // pulse the dot while collapsed
+    }
+}
 window.addEventListener("message",(event)=>{
     try{
         const data=typeof event.data==="string"
@@ -720,6 +856,7 @@ window.addEventListener("message",(event)=>{
         document.getElementById("messages").textContent=
             JSON.stringify(data,null,4);
         console.log(data);
+        registerEvent();
     }catch(e){
         console.log(event.data);
     }
